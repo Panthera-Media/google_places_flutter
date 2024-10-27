@@ -3,9 +3,9 @@ library google_places_flutter;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_places_flutter/model/place_details.dart';
-import 'package:google_places_flutter/model/place_type.dart';
-import 'package:google_places_flutter/model/prediction.dart';
+import 'model/place_details.dart';
+import 'model/place_type.dart';
+import 'model/prediction.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'dio_error_handler.dart';
