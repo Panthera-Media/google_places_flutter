@@ -1,64 +1,61 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'error_response.dart';
 
 class DioErrorHandler {
   ErrorResponse errorResponse = ErrorResponse();
-  String errorDescription = "";
-
-
-
+  String errorDescription = '';
 
   ErrorResponse handleDioError(DioException dioError) {
     switch (dioError.type) {
       case DioExceptionType.cancel:
-
-        errorResponse.message = "Request to API server was cancelled";
+        errorResponse.message = 'Request to API server was cancelled';
         break;
       case DioExceptionType.connectionTimeout:
-        errorResponse.message = "Connection timeout with API server";
+        errorResponse.message = 'Connection timeout with API server';
         break;
       case DioExceptionType.unknown:
-
-        if((dioError.message?.contains("RedirectException")??false)){
-          errorResponse.message = "${dioError.message}";
-        }else {
-          errorResponse.message = "Please check the internet connection";
+        if ((dioError.message?.contains('RedirectException') ?? false)) {
+          errorResponse.message = '${dioError.message}';
+        } else {
+          errorResponse.message = 'Please check the internet connection';
         }
         break;
       case DioExceptionType.receiveTimeout:
-
-        errorResponse.message = "Receive timeout in connection with API server";
+        errorResponse.message = 'Receive timeout in connection with API server';
         break;
       case DioExceptionType.badResponse:
         try {
-
           if (dioError.response?.data['message'] != null) {
             errorResponse.message = dioError.response?.data['message'];
           } else {
-            if ((dioError.response?.statusMessage ?? "").isNotEmpty)
+            if ((dioError.response?.statusMessage ?? '').isNotEmpty) {
               errorResponse.message = dioError.response?.statusMessage;
-            else
+            } else {
               return _handleError(
-                  dioError.response!.statusCode, dioError.response!.data);
+                dioError.response!.statusCode,
+                dioError.response!.data,
+              );
+            }
           }
         } catch (e) {
-
-          if ((dioError.response?.statusMessage ?? "").isNotEmpty)
+          if ((dioError.response?.statusMessage ?? '').isNotEmpty) {
             errorResponse.message = dioError.response?.statusMessage;
-          else
+          } else {
             return _handleError(
-                dioError.response!.statusCode, dioError.response!.data);
+              dioError.response!.statusCode,
+              dioError.response!.data,
+            );
+          }
         }
 
         break;
       case DioExceptionType.sendTimeout:
-
-        errorResponse.message = "Send timeout in connection with API server";
+        errorResponse.message = 'Send timeout in connection with API server';
         break;
       default:
-
-        errorResponse.message = "Something went wrong";
+        errorResponse.message = 'Something went wrong';
         break;
     }
     return errorResponse;
@@ -68,8 +65,8 @@ class DioErrorHandler {
     switch (statusCode) {
       case 400:
         return getMas(error);
-    // case 401:
-    //   return checkTokenExpire(error);
+      // case 401:
+      //   return checkTokenExpire(error);
       case 404:
         return getMas(error);
       case 403:
@@ -94,7 +91,7 @@ class DioErrorHandler {
   // }
 
   getMas(dynamic error) {
-    print("myError ${error.runtimeType}");
+    debugPrint('myError ${error.runtimeType}');
     if (error.runtimeType != String) {
       errorResponse.message =
           error['message'].toString(); //?? S.of(Get.context).something_wrong;
@@ -102,7 +99,7 @@ class DioErrorHandler {
       if (error['msg'] != null) {
         errorResponse.message = error['msg'].toString();
       } else {
-        errorResponse.message = "Something Wrong";
+        errorResponse.message = 'Something Wrong';
       } //S.of(Get.context).something_wrong;
     }
     return errorResponse;
@@ -114,37 +111,31 @@ class DioErrorHandler {
     } else if (error['message'] != null) {
       errorResponse.message = error['message'].toString();
     } else {
-      errorResponse.message = "Something went wrong";
+      errorResponse.message = 'Something went wrong';
     }
     return errorResponse;
   }
 }
 
-
 class ErrorHandler {
-
-  static final ErrorHandler _inst=ErrorHandler.internal();
+  static final ErrorHandler _inst = ErrorHandler.internal();
   ErrorHandler.internal();
 
   factory ErrorHandler() {
     return _inst;
   }
-  ErrorResponse errorResponse=ErrorResponse();
+  ErrorResponse errorResponse = ErrorResponse();
 
   ErrorResponse handleError(var error) {
-    if(error.runtimeType.toString().toLowerCase() =="_TypeError".toLowerCase()){
+    if (error.runtimeType.toString().toLowerCase() ==
+        '_TypeError'.toLowerCase()) {
       // return error.toString();
-      errorResponse.message ="The Provided API key is invalid";
+      errorResponse.message = 'The Provided API key is invalid';
       return errorResponse;
-    }
-
-
-    else if(error is DioException) {
+    } else if (error is DioException) {
       return DioErrorHandler().handleDioError(error);
     }
-    errorResponse.message = "The Provided API key is invalid";
+    errorResponse.message = 'The Provided API key is invalid';
     return errorResponse;
   }
-
-
 }

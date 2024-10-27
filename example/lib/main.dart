@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -14,21 +15,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Custom Autocomplete sample'),
+      home: const MyHomePage(title: 'Custom Autocomplete sample'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   TextEditingController controller = TextEditingController();
 
   @override
@@ -37,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title ?? ""),
+        title: Text(widget.title ?? ''),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -59,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             placesAutoCompleteTextField(),
           ],
         ),
@@ -69,42 +70,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   placesAutoCompleteTextField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
-        googleAPIKey:"YOUR_GOOGLE_API_KEY",
-        inputDecoration: InputDecoration(
-          hintText: "Search your location",
+        googleAPIKey: 'YOUR_GOOGLE_API_KEY',
+        inputDecoration: const InputDecoration(
+          hintText: 'Search your location',
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
         ),
         debounceTime: 400,
-        countries: ["in", "fr"],
+        countries: ['in', 'fr'],
         isLatLngRequired: true,
-        getPlaceDetailWithLatLng: (Prediction prediction) {
-          print("placeDetails" + prediction.lat.toString());
-        },
+        getPlaceDetailWithLatLng: (Prediction prediction) {},
 
         itemClick: (Prediction prediction) {
-          controller.text = prediction.description ?? "";
+          controller.text = prediction.description ?? '';
           controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: prediction.description?.length ?? 0));
+            TextPosition(offset: prediction.description?.length ?? 0),
+          );
         },
-        seperatedBuilder: Divider(),
+        seperatedBuilder: const Divider(),
         containerHorizontalPadding: 10,
-
 
         // OPTIONAL// If you want to customize list view item builder
         itemBuilder: (context, index, Prediction prediction) {
           return Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Icon(Icons.location_on),
-                SizedBox(
+                const Icon(Icons.location_on),
+                const SizedBox(
                   width: 7,
                 ),
-                Expanded(child: Text("${prediction.description ?? ""}"))
+                Expanded(child: Text(prediction.description ?? '')),
               ],
             ),
           );
