@@ -226,6 +226,7 @@ class GooglePlaceAutoCompleteTextFieldState
               color: Colors.transparent,
               child: ListView.separated(
                 padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: alPredictions.length,
                 separatorBuilder: (context, pos) =>
